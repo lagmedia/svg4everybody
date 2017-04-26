@@ -69,12 +69,12 @@
                     } else {
                         if (polyfill) {
                             if (!opts.validate || opts.validate(src, svg, use)) {
-                                // remove the <use> element
-                                parent.removeChild(use);
                                 // parse the src and get the url and id
                                 var srcSplit = src.split("#"), url = srcSplit.shift(), id = srcSplit.join("#");
                                 // if the link is external
                                 if (url.length) {
+                                    // remove the <use> element
+                                    parent.removeChild(use);
                                     // get the cached xhr request
                                     var xhr = requests[url];
                                     // ensure the xhr request exists
@@ -88,7 +88,8 @@
                                     loadreadystatechange(xhr);
                                 } else {
                                     // embed the local id into the svg
-                                    embed(parent, svg, document.getElementById(id));
+                                    embed(parent, svg, document.getElementById(id)), // increase the index since we are keeping the <use> element
+                                    ++index, ++numberOfSvgUseElementsToBypass;
                                 }
                             } else {
                                 // increase the index when the previous value was not "valid"
